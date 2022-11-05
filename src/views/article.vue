@@ -1,14 +1,17 @@
 <template>
-  <div class="content">
-    <div>{{ articleDetail.content }}</div>
+  <div class="container">
+    <p class="title">{{ articleDetail.title }}</p>
+    <div class="content">
+      <v-md-preview :text="articleDetail.content"></v-md-preview>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { onMounted, reactive, ref, toRaw, toRefs } from 'vue'
-import { useRouter } from 'vue-router'
 import { getArticleDeatil } from '@/api/article'
 import { ElMessage } from 'element-plus'
+import { onMounted, ref, toRaw } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default {
   components: {},
@@ -48,9 +51,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content {
+.container {
   max-width: 1100px;
   margin: 0 auto;
-  color: #888;
+  text-align: left;
+  .title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #c4c4c5;
+  }
+  .content {
+    :deep(.vuepress-markdown-body) {
+      color: #c4c4c5;
+      background-color: #1d1e20;
+    }
+    :deep(.vuepress-markdown-body code) {
+      background-color: rgba($color: #fff, $alpha: 0.05);
+    }
+    :deep(.vuepress-markdown-body pre code) {
+      background-color: initial;
+    }
+    :deep(.vuepress-markdown-body:not(.custom)) {
+      padding: 0;
+    }
+    .vuepress-markdown-body h2 {
+      border-bottom: 1px solid #545454;
+    }
+  }
 }
 </style>

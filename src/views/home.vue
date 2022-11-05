@@ -51,7 +51,7 @@ export default defineComponent({
       text-align: left;
       background-color: #2e2e33;
       border-radius: 8px;
-      font-weight: lighter;
+      font-weight: 300;
       margin-bottom: 50px;
       transition: box-shadow 0.5s, transform 0.5s;
       a {
