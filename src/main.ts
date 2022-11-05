@@ -10,6 +10,9 @@ import 'virtual:svg-icons-register'
 import { camelCaseToLine } from '@/utils/str-utils'
 import '@/router/guard/index'
 
+/* markdown */
+
+
 const app = createApp(App)
 
 app.use(router)
@@ -19,8 +22,4 @@ app.use(ElementPlus)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(`el-icon${camelCaseToLine(key)}`, component)
 }
-
-const env = import.meta.env
-console.log(env)
-
 app.mount('#app')

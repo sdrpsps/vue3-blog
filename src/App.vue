@@ -1,8 +1,38 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/tsx">TSX</router-link>
-  </div>
-  <router-view/>
+  <el-container>
+    <el-header height="77.5px">
+      <navHeader />
+    </el-header>
+    <el-main>
+      <router-view />
+    </el-main>
+    <el-footer height="30px">
+      <a href="https://hchow.icu" target="_blank" class="footerText">© 2022 hchow.icu</a>
+    </el-footer>
+  </el-container>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+import navHeader from './components/APP/navHeader.vue'
+
+export default defineComponent({
+  name: 'APP',
+  components: {
+    navHeader
+  }
+})
+</script>
+
+<style>
+.el-header {
+  padding: 0 !important;
+}
+.footerText {
+  text-decoration: none;
+  line-height: 30px;
+  font-size: 12px;
+  font-weight: lighter;
+  color: #888;
+}
+</style>

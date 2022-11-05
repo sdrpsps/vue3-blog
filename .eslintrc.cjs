@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-    'vue/multi-word-component-names': 'off'
+    'vue/multi-word-component-names': 'off',
+    "space-before-function-paren": 0
   }
 }

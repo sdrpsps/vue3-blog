@@ -12,7 +12,7 @@ export default defineConfig({
     vue(),
     vueSetupExtend(),
     vueJsx(),
-    eslint(),
+    // eslint(),
     createSvgIconsPlugin({
       // 要缓存的图标文件夹
       iconDirs: [path.resolve(__dirname, 'src/svg')],

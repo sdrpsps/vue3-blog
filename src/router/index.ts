@@ -8,15 +8,10 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('@/views/about.vue')
+    path: '/article',
+    name: 'Article',
+    component: () => import('@/views/article.vue')
   },
-  {
-    path: '/tsx',
-    name: 'tsx',
-    component: () => import('@/views/tsx-demo')
-  }
 ]
 
 const router = createRouter({
