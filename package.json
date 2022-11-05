@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
-    "@kangc/v-md-editor": "^2.3.15",
     "element-plus": "^2.2.19",
+    "md-editor-v3": "^2.3.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",

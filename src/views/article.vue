@@ -2,7 +2,7 @@
   <div class="container">
     <p class="title">{{ articleDetail.title }}</p>
     <div class="content">
-      <v-md-preview :text="articleDetail.content"></v-md-preview>
+      <MdEditor v-model="articleDetail.content" preview-only theme="dark" />
     </div>
   </div>
 </template>
@@ -12,11 +12,16 @@ import { getArticleDeatil } from '@/api/article'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
+import useLoadingStore from '@/store/modules/loading'
+/* MarkDown 渲染组件 */
+import MdEditor from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
 
 export default {
-  components: {},
+  components: { MdEditor },
   setup() {
     const router = useRouter()
+    const loadingStore = useLoadingStore()
     const articleID = ref(0)
     const articleDetail = ref({ title: '', content: '' })
 
@@ -37,6 +42,8 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      /* 停止 Loading 状态 */
+      loadingStore.loadingScreen(false)
     }
     onMounted(() => {
       getArticleID()
@@ -61,21 +68,8 @@ export default {
     color: #c4c4c5;
   }
   .content {
-    :deep(.vuepress-markdown-body) {
-      color: #c4c4c5;
-      background-color: #1d1e20;
-    }
-    :deep(.vuepress-markdown-body code) {
-      background-color: rgba($color: #fff, $alpha: 0.05);
-    }
-    :deep(.vuepress-markdown-body pre code) {
-      background-color: initial;
-    }
-    :deep(.vuepress-markdown-body:not(.custom)) {
-      padding: 0;
-    }
-    .vuepress-markdown-body h2 {
-      border-bottom: 1px solid #545454;
+    .md-dark {
+      --md-bk-color: #1d1e20;
     }
   }
 }

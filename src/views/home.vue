@@ -15,11 +15,15 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { getArticleList } from '@/api/home'
 import { ElMessage } from 'element-plus'
+import useLoadingStore from '@/store/modules/loading'
 
 export default defineComponent({
   name: 'home',
   components: {},
   setup() {
+    /* Loading 状态 */
+    const loadingStore = useLoadingStore()
+    /* 获取文章列表 */
     const getArticleListHandler = async () => {
       try {
         const res = await getArticleList()
@@ -30,7 +34,10 @@ export default defineComponent({
           ElMessage.error('网络错误!')
         }
       }
+      /* 停止 Loading 状态 */
+      loadingStore.loadingScreen(false)
     }
+    /* 文章列表 */
     const articleList = ref([] as any)
     onMounted(() => {
       getArticleListHandler()
