@@ -28,10 +28,6 @@ export default {
     /* 获取路由参数 */
     const getArticleID = () => {
       const id = toRaw(router).currentRoute.value.query.id as any
-      if (+id === NaN) {
-        ElMessage.error('参数有误!')
-        return
-      }
       articleID.value = +id
     }
     /* 获取文章详情 */
