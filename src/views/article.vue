@@ -1,15 +1,14 @@
 <template>
   <div class="container">
-    <p class="title">{{ articleDetail.title }}</p>
+    <p class="title">{{ articleDetail.data.title }}</p>
     <div class="content">
-      <MdEditor v-model="articleDetail.content" preview-only theme="dark" />
+      <MdEditor v-model="articleDetail.data.content" preview-only theme="dark" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { getArticleDeatil } from '@/api/article'
-import { ElMessage } from 'element-plus'
+import { getArticleDeatil } from '@/api/index'
 import { onMounted, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import useLoadingStore from '@/store/modules/loading'
@@ -23,7 +22,7 @@ export default {
     const router = useRouter()
     const loadingStore = useLoadingStore()
     const articleID = ref(0)
-    const articleDetail = ref({ title: '', content: '' })
+    const articleDetail = ref({ data: { title: '', content: '' } })
 
     /* 获取路由参数 */
     const getArticleID = () => {
@@ -33,8 +32,8 @@ export default {
     /* 获取文章详情 */
     const getArticleDeatilHanlder = async () => {
       try {
-        const res = await getArticleDeatil(articleID.value)
-        articleDetail.value = res.data
+        const res = await getArticleDeatil({ id: articleID.value })
+        articleDetail.value = res
       } catch (error) {
         console.log(error)
       }

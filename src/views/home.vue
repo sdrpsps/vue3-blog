@@ -13,8 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { getArticleList } from '@/api/home'
-import { ElMessage } from 'element-plus'
+import { getArticleList } from '@/api/index'
 import useLoadingStore from '@/store/modules/loading'
 
 export default defineComponent({
@@ -26,13 +25,10 @@ export default defineComponent({
     /* 获取文章列表 */
     const getArticleListHandler = async () => {
       try {
-        const res = await getArticleList()
+        const res = await getArticleList({ page: 1 })
         articleList.value = res.data
       } catch (error: any) {
         console.log(error)
-        if (!error.response) {
-          ElMessage.error('网络错误!')
-        }
       }
       /* 停止 Loading 状态 */
       loadingStore.loadingScreen(false)

@@ -5,7 +5,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta:{
+      title:'众乐乐博客'
+    }
   },
   {
     path: '/article',

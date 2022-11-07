@@ -1,9 +1,7 @@
 import router from '@/router'
+import useLoadingStore from '@/store/modules/loading'
 import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import useDemoStore from '@/store/modules/demo'
-import useLoadingStore from '@/store/modules/loading'
-import { storeToRefs } from 'pinia'
 
 nProgress.configure({
   showSpinner: false
@@ -13,14 +11,10 @@ nProgress.configure({
 router.beforeEach((to, from) => {
   nProgress.start()
 
-  const demoStore = useDemoStore()
-  const { counter } = storeToRefs(demoStore)
   /* 开始 Loading 状态 */
   const loadingStore = useLoadingStore()
   loadingStore.loadingScreen(true)
-    // 从 store 中获取其他值，再决定返回值
-  // 这里演示获取 store 中 counter 的值
-  console.log(`counter：${counter.value}`)
+
   return true
 })
 

@@ -1,15 +1,17 @@
 <template>
-  <el-container>
-    <el-header height="77.5px">
-      <navHeader />
-    </el-header>
-    <el-main>
-      <router-view />
-    </el-main>
-    <el-footer height="30px">
-      <a href="https://hchow.icu" target="_blank" class="footerText">© 2022 hchow.icu</a>
-    </el-footer>
-  </el-container>
+  <el-scrollbar height="100vh">
+    <el-container>
+      <el-header height="77.5px">
+        <navHeader />
+      </el-header>
+      <el-main>
+        <router-view />
+      </el-main>
+      <el-footer height="30px">
+        <a href="https://hchow.icu" target="_blank" class="footerText">© 2022 hchow.icu</a>
+      </el-footer>
+    </el-container>
+  </el-scrollbar>
 </template>
 
 <script lang="ts">
@@ -34,5 +36,8 @@ export default defineComponent({
   font-size: 12px;
   font-weight: lighter;
   color: #888;
+}
+.el-scrollbar__bar.is-vertical {
+  width: 4px !important;
 }
 </style>
