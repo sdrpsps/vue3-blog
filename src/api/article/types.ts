@@ -1,19 +1,18 @@
+/* 文章列表请求参数 */
 export interface articleListData {
     page: number
 }
-
+/* 文章列表结果 */
 export interface articleListRes {
     meta: articleListMeta;
     data: articleListDatum[];
 }
-
-interface articleListDatum {
+export interface articleListDatum {
     id: number;
     title: string;
     content: string;
     categoryId: number;
 }
-
 interface articleListMeta {
     code: number;
     message: string;
@@ -24,7 +23,6 @@ interface articleListMeta {
     totalPage: number;
 }
 
-
 /* 文章详情参数 */
 export interface articleDeatilData {
     id: number
@@ -34,14 +32,12 @@ export interface articleDeatilRes {
     meta: articleDetailMeta;
     data: articleDetailData;
 }
-
 interface articleDetailData {
     id: number;
     title: string;
     content: string;
     categoryId: number;
 }
-
 interface articleDetailMeta {
     code: number;
     message: string;

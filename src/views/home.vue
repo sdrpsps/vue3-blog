@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 import { getArticleList } from '@/api/index'
+import { articleListDatum } from '@/api/article/types'
 import useLoadingStore from '@/store/modules/loading'
 
 export default defineComponent({
@@ -22,19 +23,22 @@ export default defineComponent({
   setup() {
     /* Loading 状态 */
     const loadingStore = useLoadingStore()
+    /* 文章列表 */
+    const articleList = ref([] as articleListDatum[])
+    /* 文章分页 */
+    const articlePage = ref({ currPage: 1 })
     /* 获取文章列表 */
     const getArticleListHandler = async () => {
       try {
-        const res = await getArticleList({ page: 1 })
+        const res = await getArticleList({ page: articlePage.value.currPage })
         articleList.value = res.data
+        articlePage.value = res.meta
       } catch (error: any) {
         console.log(error)
       }
       /* 停止 Loading 状态 */
       loadingStore.loadingScreen(false)
     }
-    /* 文章列表 */
-    const articleList = ref([] as any)
     onMounted(() => {
       getArticleListHandler()
     })
@@ -49,7 +53,7 @@ export default defineComponent({
   max-width: 1100px;
   margin: 0 auto;
   .article {
-    padding: 60px 40px 0px 40px;
+    padding: 60px 20px 0px 20px;
     .articleItem {
       text-align: left;
       background-color: #2e2e33;
