@@ -27,6 +27,9 @@ export default defineComponent({
 </script>
 
 <style>
+#nprogress .bar {
+  background: yellow !important;
+}
 .el-header {
   padding: 0 !important;
 }

@@ -15,15 +15,15 @@ export interface Result<T = any> {
 
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
-  timeout: 0
+  timeout: 5000
 })
 
 /* 请求拦截器 */
 service.interceptors.request.use((config: AxiosRequestConfig) => {
-  //  伪代码
-  // if (user.token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers!.Authorization = `Bearer ${token}`;
+  }
   return config
 }, (error: AxiosError) => {
   ElMessage.error(error.message);
@@ -44,29 +44,8 @@ service.interceptors.response.use((response: AxiosResponse) => {
     return Promise.reject(new Error(meta.message))
   }
 }, (error: AxiosError) => {
-  // 处理 HTTP 网络错误
-  let message = ''
-  // HTTP 状态码
-  const status = error.response?.status
-  switch (status) {
-    case 401:
-      message = 'token 失效，请重新登录'
-      // 这里可以触发退出的 action
-      break;
-    case 403:
-      message = '拒绝访问'
-      break;
-    case 404:
-      message = '请求地址错误'
-      break;
-    case 500:
-      message = '服务器故障'
-      break;
-    default:
-      message = '网络连接故障'
-  }
-
-  ElMessage.error(message)
+  const { meta } = error.response?.data as any
+  ElMessage.error(JSON.stringify(meta.message))
   return Promise.reject(error)
 })
 

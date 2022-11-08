@@ -1,5 +1,5 @@
 import router from '@/router'
-import useLoadingStore from '@/store/modules/loading'
+import { loadingScreen } from '@/utils/loading'
 import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -9,16 +9,17 @@ nProgress.configure({
 
 // 全局前置守卫
 router.beforeEach((to, from) => {
-  nProgress.start()
-
-  /* 开始 Loading 状态 */
-  const loadingStore = useLoadingStore()
-  loadingStore.loadingScreen(true)
-
-  return true
+  console.log(to.name);
+  const whiteList = ['Login']
+  if (whiteList.includes(to.name as string)) {
+    return
+  } else {
+    /* 开始 Loading 状态 */
+    loadingScreen(true)
+  }
 })
 
 // 全局后置钩子
 router.afterEach(() => {
-  nProgress.done(true)
+
 })

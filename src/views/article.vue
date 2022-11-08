@@ -11,8 +11,8 @@
 import { getArticleDeatil } from '@/api/index'
 import { onMounted, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
-import useLoadingStore from '@/store/modules/loading'
 /* MarkDown 渲染组件 */
+import { loadingScreen } from '@/utils/loading'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
@@ -20,7 +20,6 @@ export default {
   components: { MdEditor },
   setup() {
     const router = useRouter()
-    const loadingStore = useLoadingStore()
     const articleID = ref(0)
     const articleDetail = ref({ data: { title: '', content: '' } })
 
@@ -38,7 +37,7 @@ export default {
         console.log(error)
       }
       /* 停止 Loading 状态 */
-      loadingStore.loadingScreen(false)
+      loadingScreen(false)
     }
     onMounted(() => {
       getArticleID()

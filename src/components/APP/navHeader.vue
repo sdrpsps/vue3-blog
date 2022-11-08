@@ -9,23 +9,54 @@
           <li @click="changeActiveTab('blog')" :class="activeTab === 'blog' ? 'active' : ''">众乐乐博客</li>
         </router-link>
       </ul>
+      <div class="btn">
+        <el-button color="#3BA293" :dark="true" class="whiteText" @click="gotoLogin" v-if="!isLogin">登录</el-button>
+        <el-button color="#4978C3" :dark="true" @click="gotoRegister" v-if="!isLogin">注册</el-button>
+        <el-popconfirm title="确定退出吗?" confirm-button-text="是" cancel-button-text="否" @confirm="logOut" v-else>
+          <template #reference>
+            <el-button :dark="true">退出</el-button>
+          </template>
+        </el-popconfirm>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import useUserStore from '@/store/modules/user'
+import { storeToRefs } from 'pinia'
 
 export default defineComponent({
   name: 'navHeader',
   setup() {
+    const router = useRouter()
     const activeTab = ref('blog')
     const changeActiveTab = (tabName: any) => {
       activeTab.value = tabName
     }
+    /* 跳转到登录 */
+    const gotoLogin = () => {
+      router.push({ name: 'Login', query: { type: 'login' } })
+    }
+    /* 跳转到注册 */
+    const gotoRegister = () => {
+      router.push({ name: 'Login', query: { type: 'register' } })
+    }
+    /* 是否登录 */
+    const userStore = useUserStore()
+    const { isLogin } = storeToRefs(userStore)
+    const logOut = () => {
+      userStore.changeLoginStatus(false)
+    }
     return {
       activeTab,
-      changeActiveTab
+      changeActiveTab,
+      gotoLogin,
+      gotoRegister,
+      isLogin,
+      logOut
     }
   }
 })
@@ -41,6 +72,8 @@ export default defineComponent({
     margin: 0 auto;
     height: 100%;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
     .tab {
       list-style: none;
       display: flex;
@@ -61,6 +94,12 @@ export default defineComponent({
         li:hover {
           background-color: #3a3a41;
         }
+      }
+    }
+    .btn {
+      .whiteText {
+        --el-button-text-color: var(--el-color-white) !important;
+        --el-button-hover-text-color: var(--el-color-white) !important;
       }
     }
   }

@@ -15,14 +15,12 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { getArticleList } from '@/api/index'
 import { articleListDatum } from '@/api/article/types'
-import useLoadingStore from '@/store/modules/loading'
+import { loadingScreen } from '@/utils/loading'
 
 export default defineComponent({
   name: 'home',
   components: {},
   setup() {
-    /* Loading 状态 */
-    const loadingStore = useLoadingStore()
     /* 文章列表 */
     const articleList = ref([] as articleListDatum[])
     /* 文章分页 */
@@ -33,11 +31,11 @@ export default defineComponent({
         const res = await getArticleList({ page: articlePage.value.currPage })
         articleList.value = res.data
         articlePage.value = res.meta
-      } catch (error: any) {
+      } catch (error) {
         console.log(error)
       }
       /* 停止 Loading 状态 */
-      loadingStore.loadingScreen(false)
+      loadingScreen(false)
     }
     onMounted(() => {
       getArticleListHandler()
