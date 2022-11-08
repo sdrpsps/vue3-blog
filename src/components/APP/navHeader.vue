@@ -14,7 +14,7 @@
         <el-button color="#4978C3" :dark="true" @click="gotoRegister" v-if="!isLogin">注册</el-button>
         <el-popconfirm title="确定退出吗?" confirm-button-text="是" cancel-button-text="否" @confirm="logOut" v-else>
           <template #reference>
-            <el-button :dark="true">退出</el-button>
+            <el-button color="#F06367" plain :dark="true">退出登录</el-button>
           </template>
         </el-popconfirm>
       </div>
