@@ -1,9 +1,9 @@
 <template>
   <div class="home">
+    <div class="skeleton">
+      <el-skeleton :rows="5" animated :loading="loading" />
+    </div>
     <div class="article">
-      <div class="skeleton">
-        <el-skeleton :rows="5" animated :loading="loading" />
-      </div>
       <div class="articleItem" v-for="item in articleList" :key="item.id">
         <router-link :to="{ name: 'Article', query: { id: item.id } }">
           <p class="title">{{ item.title }}</p>
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import { getArticleList } from '@/api/index'
 import { articleListDatum } from '@/api/article/types'
 
@@ -28,22 +28,49 @@ export default defineComponent({
     /* 文章列表 */
     const articleList = ref([] as articleListDatum[])
     /* 文章分页 */
-    const articlePage = ref({ currPage: 1 })
+    const articlePage = ref(1)
     /* 获取文章列表 */
     const getArticleListHandler = async () => {
       try {
-        const res = await getArticleList({ page: articlePage.value.currPage })
-        articleList.value = res.data
-        articlePage.value = res.meta
+        const res = await getArticleList({ page: articlePage.value })
+        articleList.value.push(...res.data)
+        articlePage.value = res.meta.currPage
       } catch (error) {
         console.log(error)
       }
       /* 停止 Loading 状态 */
       loading.value = false
     }
+
+    // #region 触底函数相关
+    //文档高度
+    function getDocumentTop() {
+      return document.documentElement.offsetHeight
+    }
+    //可视窗口高度
+    function getWindowHeight() {
+      return document.documentElement.clientHeight
+    }
+    //滚动条滚动高度
+    function getScrollHeight() {
+      return Math.max(document.documentElement.scrollTop, window.pageYOffset || 0)
+    }
+    /* 触底函数 */
+    const touchBottom = () => {
+      window.addEventListener('scroll', () => {
+        let result = getScrollHeight() + getWindowHeight() >= getDocumentTop()
+        if (result) {
+          articlePage.value++
+          getArticleListHandler()
+        }
+      })
+    }
+    // #endregion
     onMounted(() => {
       getArticleListHandler()
+      touchBottom()
     })
+
     return {
       loading,
       articleList
@@ -55,9 +82,10 @@ export default defineComponent({
 .home {
   max-width: 1100px;
   margin: 0 auto;
+  text-align: left;
+
   .article {
     padding: 60px 20px 0px 20px;
-    text-align: left;
     .articleItem {
       background-color: #2e2e33;
       border-radius: 8px;

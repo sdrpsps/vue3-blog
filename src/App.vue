@@ -1,24 +1,21 @@
 <template>
-  <el-scrollbar height="100vh">
-    <el-container>
-      <el-header height="77.5px">
-        <navHeader />
-      </el-header>
-      <el-main>
-        <router-view />
-      </el-main>
-      <el-footer height="30px">
-        <a href="https://hchow.icu" target="_blank" class="footerText">© 2022 hchow.icu</a>
-      </el-footer>
-    </el-container>
-  </el-scrollbar>
+  <el-container>
+    <el-header height="77.5px">
+      <navHeader />
+    </el-header>
+    <el-main>
+      <router-view />
+    </el-main>
+    <el-footer height="30px">
+      <a href="https://hchow.icu" target="_blank" class="footerText">© 2022 hchow.icu</a>
+    </el-footer>
+  </el-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue'
 import navHeader from './components/APP/navHeader.vue'
 import useUserStore from './store/modules/user'
-
 
 export default defineComponent({
   name: 'APP',
@@ -27,7 +24,6 @@ export default defineComponent({
   },
   setup() {
     const userStore = useUserStore()
-
     onMounted(() => {
       userStore.getToken()
     })

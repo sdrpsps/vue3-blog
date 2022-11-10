@@ -2,7 +2,7 @@ body {
   margin: 0;
   display: flex;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100%;
   background-color: #1d1e20;
 }
 body::-webkit-scrollbar {
