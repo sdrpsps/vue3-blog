@@ -11,14 +11,19 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/article',
-    name: 'Article',
-    component: () => import('@/views/article.vue')
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login.vue')
+  },
+  {
+    path: '/article',
+    name: 'Article',
+    component: () => import('@/views/article/detail.vue')
+  },
+  {
+    path: '/edit',
+    name: 'Edit',
+    component: () => import('@/views/article/edit.vue')
   },
 ]
 

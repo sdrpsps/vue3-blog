@@ -15,7 +15,6 @@ import { getArticleDeatil } from '@/api/index'
 import { onMounted, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 /* MarkDown 渲染组件 */
-import { loadingScreen } from '@/utils/loading'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
@@ -42,7 +41,6 @@ export default {
         console.log(error)
       }
       /* 停止 Loading 状态 */
-      // loadingScreen(false)
       loading.value = false
     }
     onMounted(() => {

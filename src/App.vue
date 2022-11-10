@@ -15,13 +15,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import navHeader from './components/APP/navHeader.vue'
+import useUserStore from './store/modules/user'
+
 
 export default defineComponent({
   name: 'APP',
   components: {
     navHeader
+  },
+  setup() {
+    const userStore = useUserStore()
+
+    onMounted(() => {
+      userStore.getToken()
+    })
   }
 })
 </script>

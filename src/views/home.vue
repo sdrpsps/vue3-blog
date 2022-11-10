@@ -18,7 +18,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { getArticleList } from '@/api/index'
 import { articleListDatum } from '@/api/article/types'
-import { loadingScreen } from '@/utils/loading'
 
 export default defineComponent({
   name: 'home',
@@ -39,9 +38,8 @@ export default defineComponent({
       } catch (error) {
         console.log(error)
       }
-      loading.value = false
       /* 停止 Loading 状态 */
-      // loadingScreen(false)
+      loading.value = false
     }
     onMounted(() => {
       getArticleListHandler()

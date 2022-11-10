@@ -88,8 +88,8 @@ export default defineComponent({
           } catch (error) {
             console.log(error)
           }
+          loadingScreen(false)
         }
-        loadingScreen(false)
       })
     }
     // 重置登录表单

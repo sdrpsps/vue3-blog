@@ -10,13 +10,18 @@
         </router-link>
       </ul>
       <div class="btn">
-        <el-button color="#3BA293" plain :dark="true" @click="gotoLogin" v-if="!isLogin">登录</el-button>
-        <el-button color="#4978C3" plain :dark="true" @click="gotoRegister" v-if="!isLogin">注册</el-button>
-        <el-popconfirm title="确定退出吗?" confirm-button-text="是" cancel-button-text="否" @confirm="logOut" v-else>
-          <template #reference>
-            <el-button color="#F06367" plain :dark="true">退出登录</el-button>
-          </template>
-        </el-popconfirm>
+        <div class="notLogged" v-if="!isLogin">
+          <el-button color="#3BA293" plain :dark="true" @click="gotoLogin">登录</el-button>
+          <el-button color="#4978C3" plain :dark="true" @click="gotoRegister">注册</el-button>
+        </div>
+        <div class="logged" v-else>
+          <el-button color="#3BA293" plain :dark="true" @click="gotoEdit" v-if="!isEdit">写文章</el-button>
+          <el-popconfirm title="确定退出吗?" confirm-button-text="是" cancel-button-text="否" @confirm="logOut">
+            <template #reference>
+              <el-button color="#F06367" plain :dark="true">退出登录</el-button>
+            </template>
+          </el-popconfirm>
+        </div>
       </div>
     </div>
   </div>
@@ -44,9 +49,13 @@ export default defineComponent({
     const gotoRegister = () => {
       router.push({ name: 'Login', query: { type: 'register' } })
     }
+    /* 跳转到编辑 */
+    const gotoEdit = () => {
+      router.push({ name: 'Edit' })
+    }
     /* 是否登录 */
     const userStore = useUserStore()
-    const { isLogin } = storeToRefs(userStore)
+    const { isLogin, isEdit } = storeToRefs(userStore)
     const logOut = () => {
       userStore.changeLoginStatus(false)
     }
@@ -55,8 +64,10 @@ export default defineComponent({
       changeActiveTab,
       gotoLogin,
       gotoRegister,
+      gotoEdit,
       isLogin,
-      logOut
+      logOut,
+      isEdit,
     }
   }
 })

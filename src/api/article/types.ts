@@ -43,3 +43,20 @@ interface articleDetailMeta {
     message: string;
     success: boolean;
 }
+
+/* 新增文章参数 */
+export interface addArticleData {
+    categoryId?: string;
+    content: string;
+    title: string;
+}
+/* 新增文章结果 */
+export interface addArticleRes {
+    data: null;
+    meta: addArticleMeta;
+}
+export interface addArticleMeta {
+    code: number;
+    message: string;
+    success: boolean;
+}
