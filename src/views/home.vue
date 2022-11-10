@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <div class="article">
+      <div class="skeleton">
+        <el-skeleton :rows="5" animated :loading="loading" />
+      </div>
       <div class="articleItem" v-for="item in articleList" :key="item.id">
         <router-link :to="{ name: 'Article', query: { id: item.id } }">
           <p class="title">{{ item.title }}</p>
@@ -21,6 +24,8 @@ export default defineComponent({
   name: 'home',
   components: {},
   setup() {
+    /* 加载状态 */
+    const loading = ref(true)
     /* 文章列表 */
     const articleList = ref([] as articleListDatum[])
     /* 文章分页 */
@@ -34,13 +39,15 @@ export default defineComponent({
       } catch (error) {
         console.log(error)
       }
+      loading.value = false
       /* 停止 Loading 状态 */
-      loadingScreen(false)
+      // loadingScreen(false)
     }
     onMounted(() => {
       getArticleListHandler()
     })
     return {
+      loading,
       articleList
     }
   }
@@ -52,8 +59,8 @@ export default defineComponent({
   margin: 0 auto;
   .article {
     padding: 60px 20px 0px 20px;
+    text-align: left;
     .articleItem {
-      text-align: left;
       background-color: #2e2e33;
       border-radius: 8px;
       font-weight: 300;

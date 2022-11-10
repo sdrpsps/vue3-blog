@@ -1,38 +1,36 @@
 <template>
   <div class="login">
-    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-      <el-tab-pane label="登录" name="login">
-        <el-form label-position="top" label-width="100px" :model="loginForm" ref="loginFormRef" :rules="loginFormRules">
-          <el-form-item label="用户名" prop="name">
-            <el-input v-model="loginForm.name" />
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password" type="password" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitLoginForm(loginFormRef)">登录</el-button>
-            <el-button @click="resetLoginForm(loginFormRef)">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="注册" name="register">
-        <el-form label-position="top" label-width="100px" :model="registerForm" ref="registerFormRef" :rules="registerFormRules">
-          <el-form-item label="用户名" prop="name">
-            <el-input v-model="registerForm.name" />
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="registerForm.password" type="password" />
-          </el-form-item>
-          <el-form-item label="确认密码" prop="password_confirm">
-            <el-input v-model="registerForm.password_confirm" type="password" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitRegisterForm(registerFormRef)">注册</el-button>
-            <el-button @click="resetRegisterForm(registerFormRef)">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-    </el-tabs>
+    <div class="loginForm" v-if="activeName === 'login'">
+      <el-form label-position="top" label-width="100px" :model="loginForm" ref="loginFormRef" :rules="loginFormRules">
+        <el-form-item label="用户名" prop="name">
+          <el-input v-model="loginForm.name" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="loginForm.password" type="password" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitLoginForm(loginFormRef)">登录</el-button>
+          <el-button @click="resetLoginForm(loginFormRef)">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="registerForm" v-else>
+      <el-form label-position="top" label-width="100px" :model="registerForm" ref="registerFormRef" :rules="registerFormRules">
+        <el-form-item label="用户名" prop="name">
+          <el-input v-model="registerForm.name" />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="registerForm.password" type="password" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="password_confirm">
+          <el-input v-model="registerForm.password_confirm" type="password" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitRegisterForm(registerFormRef)">注册</el-button>
+          <el-button @click="resetRegisterForm(registerFormRef)">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -42,6 +40,7 @@ import { defineComponent, onMounted, reactive, ref, toRaw } from 'vue'
 import { login, register } from '@/api'
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
+import { loadingScreen } from '@/utils/loading'
 
 export default defineComponent({
   setup() {
@@ -57,9 +56,6 @@ export default defineComponent({
     })
     /* tabs */
     const activeName = ref('login')
-    const handleClick = (tab: TabsPaneContext) => {
-      activeName.value = tab.paneName as string
-    }
     /* 登录表单 */
     const loginForm = reactive({
       name: '',
@@ -82,6 +78,7 @@ export default defineComponent({
       if (!formEl) return
       await formEl.validate(async (valid) => {
         if (valid) {
+          loadingScreen(true)
           try {
             const res = await login(loginForm)
             ElMessage.success('登录成功!')
@@ -92,6 +89,7 @@ export default defineComponent({
             console.log(error)
           }
         }
+        loadingScreen(false)
       })
     }
     // 重置登录表单
@@ -128,6 +126,7 @@ export default defineComponent({
       if (!formEl) return
       await formEl.validate(async (valid) => {
         if (valid) {
+          loadingScreen(true)
           try {
             await register(registerForm)
             ElMessage.success('注册成功,请登录!')
@@ -135,6 +134,7 @@ export default defineComponent({
           } catch (error) {
             console.log(error)
           }
+          loadingScreen(false)
         }
       })
     }
@@ -149,7 +149,6 @@ export default defineComponent({
     })
     return {
       activeName,
-      handleClick,
       loginForm,
       loginFormRef,
       loginFormRules,
@@ -171,8 +170,13 @@ export default defineComponent({
   padding: 40px;
   width: 400px;
   border-radius: 6px;
-  background-color: #fff;
-  box-shadow: 12px 12px 0 0 #262626;
+  background-color: #23272d;
   margin: 0 auto;
+  :deep(.el-form-item__label) {
+    color: #bcbcbc;
+  }
+  :deep(.el-input__wrapper) {
+    background-color: rgba($color: #fff, $alpha: 0.9);
+  }
 }
 </style>

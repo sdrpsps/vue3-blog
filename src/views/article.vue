@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div class="skeleton">
+      <el-skeleton :rows="10" animated :loading="loading" />
+    </div>
     <p class="title">{{ articleDetail.data.title }}</p>
     <div class="content">
       <MdEditor v-model="articleDetail.data.content" preview-only theme="dark" />
@@ -19,6 +22,8 @@ import 'md-editor-v3/lib/style.css'
 export default {
   components: { MdEditor },
   setup() {
+    /* 加载状态 */
+    const loading = ref(true)
     const router = useRouter()
     const articleID = ref(0)
     const articleDetail = ref({ data: { title: '', content: '' } })
@@ -37,7 +42,8 @@ export default {
         console.log(error)
       }
       /* 停止 Loading 状态 */
-      loadingScreen(false)
+      // loadingScreen(false)
+      loading.value = false
     }
     onMounted(() => {
       getArticleID()
@@ -45,6 +51,7 @@ export default {
     })
 
     return {
+      loading,
       articleDetail
     }
   }

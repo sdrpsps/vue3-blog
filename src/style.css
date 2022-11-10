@@ -19,3 +19,7 @@ body::-webkit-scrollbar {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
+.el-skeleton {
+  --el-skeleton-color: #2e2e33 !important;
+  --el-skeleton-to-color: #1d1e20 !important;
+}

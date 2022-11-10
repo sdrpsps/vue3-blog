@@ -9,14 +9,7 @@ nProgress.configure({
 
 // 全局前置守卫
 router.beforeEach((to, from) => {
-  console.log(to.name);
-  const whiteList = ['Login']
-  if (whiteList.includes(to.name as string)) {
-    return
-  } else {
-    /* 开始 Loading 状态 */
-    loadingScreen(true)
-  }
+
 })
 
 // 全局后置钩子
