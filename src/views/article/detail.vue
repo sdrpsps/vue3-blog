@@ -10,50 +10,40 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { getArticleDeatil } from '@/api/index'
 import { onMounted, ref, toRaw } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 /* MarkDown 渲染组件 */
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
-export default {
-  components: { MdEditor },
-  setup() {
-    /* 加载状态 */
-    const loading = ref(true)
-    const router = useRouter()
-    const articleID = ref(0)
-    const articleDetail = ref({ data: { title: '', content: '' } })
+/* 加载状态 */
+const loading = ref(true)
+const route = useRoute()
+const articleID = ref(0)
+const articleDetail = ref({ data: { title: '', content: '' } })
 
-    /* 获取路由参数 */
-    const getArticleID = () => {
-      const id = toRaw(router).currentRoute.value.query.id as any
-      articleID.value = +id
-    }
-    /* 获取文章详情 */
-    const getArticleDeatilHanlder = async () => {
-      try {
-        const res = await getArticleDeatil({ id: articleID.value })
-        articleDetail.value = res
-      } catch (error) {
-        console.log(error)
-      }
-      /* 停止 Loading 状态 */
-      loading.value = false
-    }
-    onMounted(() => {
-      getArticleID()
-      getArticleDeatilHanlder()
-    })
-
-    return {
-      loading,
-      articleDetail
-    }
-  }
+/* 获取路由参数 */
+const getArticleID = () => {
+  const id = route.query.id as string
+  articleID.value = +id
 }
+/* 获取文章详情 */
+const getArticleDeatilHanlder = async () => {
+  try {
+    const res = await getArticleDeatil({ id: articleID.value })
+    articleDetail.value = res
+  } catch (error) {
+    console.log(error)
+  }
+  /* 停止 Loading 状态 */
+  loading.value = false
+}
+onMounted(() => {
+  getArticleID()
+  getArticleDeatilHanlder()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -67,7 +57,7 @@ export default {
     color: #c4c4c5;
   }
   .content {
-    .md-dark {
+    .md-editor-dark {
       --md-bk-color: #1d1e20;
     }
   }

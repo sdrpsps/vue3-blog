@@ -12,22 +12,14 @@
   </el-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted } from 'vue'
-import navHeader from './components/APP/navHeader.vue'
-import useUserStore from './store/modules/user'
+<script lang="ts" setup>
+import { onMounted } from 'vue';
+import navHeader from './components/APP/navHeader.vue';
+import useUserStore from './store/modules/user';
 
-export default defineComponent({
-  name: 'APP',
-  components: {
-    navHeader
-  },
-  setup() {
-    const userStore = useUserStore()
-    onMounted(() => {
-      userStore.getToken()
-    })
-  }
+const userStore = useUserStore()
+onMounted(() => {
+  userStore.getToken()
 })
 </script>
 

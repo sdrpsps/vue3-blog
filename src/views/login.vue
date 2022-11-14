@@ -34,134 +34,117 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ElMessage, FormInstance, FormRules, TabsPaneContext } from 'element-plus'
-import { defineComponent, onMounted, reactive, ref, toRaw } from 'vue'
+<script lang="ts" setup>
 import { login, register } from '@/api'
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
 import { loadingScreen } from '@/utils/loading'
+import { ElMessage, FormInstance, FormRules } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 
-export default defineComponent({
-  setup() {
-    const router = useRouter()
-    /* 获取路由参数 */
-    const getFormType = () => {
-      const type = toRaw(router).currentRoute.value.query.type as string
-      activeName.value = type
+const route = useRoute()
+const router = useRouter()
+/* 获取路由参数 */
+const getFormType = () => {
+  const type = route.query.type as string
+  activeName.value = type
+}
+/* 路由参数改变时 */
+onBeforeRouteUpdate((to, from) => {
+  activeName.value = to.query.type as string
+})
+/* tabs */
+const activeName = ref('login')
+/* 登录表单 */
+const loginForm = reactive({
+  name: '',
+  password: ''
+})
+const loginFormRef = ref<FormInstance>()
+const loginFormRules = reactive<FormRules>({
+  name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur'
     }
-    /* 路由参数改变时 */
-    onBeforeRouteUpdate((to, from) => {
-      activeName.value = to.query.type as string
-    })
-    /* tabs */
-    const activeName = ref('login')
-    /* 登录表单 */
-    const loginForm = reactive({
-      name: '',
-      password: ''
-    })
-    const loginFormRef = ref<FormInstance>()
-    const loginFormRules = reactive<FormRules>({
-      name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-      password: [
-        {
-          required: true,
-          message: '请输入密码',
-          trigger: 'blur'
-        }
-      ]
-    })
-    const userStore = useUserStore()
-    // 提交登录表单
-    const submitLoginForm = async (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      await formEl.validate(async (valid) => {
-        if (valid) {
-          loadingScreen(true)
-          try {
-            const res = await login(loginForm)
-            ElMessage.success('登录成功!')
-            localStorage.setItem('token', res.data.token)
-            userStore.changeLoginStatus(true)
-            router.push({ name: 'Home' })
-          } catch (error) {
-            console.log(error)
-          }
-          loadingScreen(false)
-        }
-      })
+  ]
+})
+const userStore = useUserStore()
+// 提交登录表单
+const submitLoginForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async (valid) => {
+    if (valid) {
+      loadingScreen(true)
+      try {
+        const res = await login(loginForm)
+        ElMessage.success('登录成功!')
+        localStorage.setItem('token', res.data.token)
+        userStore.changeLoginStatus(true)
+        router.push({ name: 'Home' })
+      } catch (error) {
+        console.log(error)
+      }
+      loadingScreen(false)
     }
-    // 重置登录表单
-    const resetLoginForm = (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      formEl.resetFields()
+  })
+}
+// 重置登录表单
+const resetLoginForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
+/* 注册表单 */
+const registerForm = reactive({
+  name: '',
+  password: '',
+  password_confirm: ''
+})
+const registerFormRef = ref<FormInstance>()
+const registerFormRules = reactive<FormRules>({
+  name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  password: [
+    {
+      required: true,
+      message: '请输入密码',
+      trigger: 'blur'
     }
-    /* 注册表单 */
-    const registerForm = reactive({
-      name: '',
-      password: '',
-      password_confirm: ''
-    })
-    const registerFormRef = ref<FormInstance>()
-    const registerFormRules = reactive<FormRules>({
-      name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-      password: [
-        {
-          required: true,
-          message: '请输入密码',
-          trigger: 'blur'
-        }
-      ],
-      password_confirm: [
-        {
-          required: true,
-          message: '请输入确认密码',
-          trigger: 'blur'
-        }
-      ]
-    })
-    // 提交注册表单
-    const submitRegisterForm = async (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      await formEl.validate(async (valid) => {
-        if (valid) {
-          loadingScreen(true)
-          try {
-            await register(registerForm)
-            ElMessage.success('注册成功,请登录!')
-            activeName.value = 'login'
-          } catch (error) {
-            console.log(error)
-          }
-          loadingScreen(false)
-        }
-      })
+  ],
+  password_confirm: [
+    {
+      required: true,
+      message: '请输入确认密码',
+      trigger: 'blur'
     }
-    // 重置注册表单
-    const resetRegisterForm = (formEl: FormInstance | undefined) => {
-      if (!formEl) return
-      formEl.resetFields()
+  ]
+})
+// 提交注册表单
+const submitRegisterForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async (valid) => {
+    if (valid) {
+      loadingScreen(true)
+      try {
+        await register(registerForm)
+        ElMessage.success('注册成功,请登录!')
+        activeName.value = 'login'
+      } catch (error) {
+        console.log(error)
+      }
+      loadingScreen(false)
     }
+  })
+}
+// 重置注册表单
+const resetRegisterForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
 
-    onMounted(() => {
-      getFormType()
-    })
-    return {
-      activeName,
-      loginForm,
-      loginFormRef,
-      loginFormRules,
-      submitLoginForm,
-      resetLoginForm,
-      registerForm,
-      registerFormRef,
-      registerFormRules,
-      submitRegisterForm,
-      resetRegisterForm
-    }
-  },
-  watch: {}
+onMounted(() => {
+  getFormType()
 })
 </script>
 

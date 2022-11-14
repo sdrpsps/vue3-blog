@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 /* MarkDown 渲染组件 */
 import MdEditor from 'md-editor-v3'
@@ -27,39 +27,31 @@ import { categoryListDatum } from '@/api/category/types'
 import { addArticleData } from '@/api/article/types'
 import { loadingScreen } from '@/utils/loading'
 
-export default defineComponent({
-  components: { MdEditor },
-  setup() {
-    /* 栏目列表 */
-    const categoryList = ref([] as categoryListDatum[])
-    /* 获取栏目列表 */
-    const getCategoryListHandler = async () => {
-      try {
-        const res = await getCategoryList()
-        categoryList.value = res.data
-      } catch (error) {}
-    }
-    /* 文章详情 */
-    const articleData = reactive({} as addArticleData)
-    /* 保存文章 */
-    const onSave = async () => {
-      try {
-        loadingScreen(true)
-        await addArticle(articleData)
-      } catch (error) {
-        console.log(error)
-      }
-      loadingScreen(false)
-    }
-    onMounted(() => {
-      getCategoryListHandler()
-    })
-    return {
-      categoryList,
-      articleData,
-      onSave
-    }
+/* 栏目列表 */
+const categoryList = ref([] as categoryListDatum[])
+/* 获取栏目列表 */
+const getCategoryListHandler = async () => {
+  try {
+    const res = await getCategoryList()
+    categoryList.value = res.data
+  } catch (error) {
+    console.log(error)
   }
+}
+/* 文章详情 */
+const articleData = reactive({} as addArticleData)
+/* 保存文章 */
+const onSave = async () => {
+  try {
+    loadingScreen(true)
+    await addArticle(articleData)
+  } catch (error) {
+    console.log(error)
+  }
+  loadingScreen(false)
+}
+onMounted(() => {
+  getCategoryListHandler()
 })
 </script>
 
@@ -72,7 +64,7 @@ export default defineComponent({
   :deep(.el-input__wrapper) {
     background-color: rgba($color: #fff, $alpha: 0.9);
   }
-  .longer{
+  .longer {
     width: 400px;
   }
 }
