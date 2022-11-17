@@ -65,7 +65,11 @@ export const http = {
 
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return service.delete(url, config)
-  }
+  },
+
+  patch<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {
+    return service.patch(url, data, config)
+  },
 }
 
 /* 导出 axios 实例 */

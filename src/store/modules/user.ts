@@ -18,6 +18,7 @@ const useUserStore = defineStore('user', () => {
     } else {
       isLogin.value = false
       localStorage.removeItem('token')
+      localStorage.removeItem('name')
       /* 刷新页面 */
       location.reload()
     }

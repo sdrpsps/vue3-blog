@@ -82,6 +82,7 @@ const submitLoginForm = async (formEl: FormInstance | undefined) => {
         const res = await login(loginForm)
         ElMessage.success('登录成功!')
         localStorage.setItem('token', res.data.token)
+        localStorage.setItem('name', res.data.name)
         userStore.changeLoginStatus(true)
         router.push({ name: 'Home' })
       } catch (error) {

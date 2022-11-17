@@ -5,9 +5,9 @@ interface Meta {
 }
 
 /* 登录参数 */
-export interface loginData{
-    name:string
-    password:string
+export interface loginData {
+    name: string
+    password: string
 }
 /* 登录结果 */
 export interface loginRes {
@@ -15,6 +15,7 @@ export interface loginRes {
     meta: Meta;
 }
 export interface loginResData {
+    name: string;
     token: string;
 }
 

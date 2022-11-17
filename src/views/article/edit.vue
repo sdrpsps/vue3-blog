@@ -22,11 +22,17 @@ import { defineComponent, onMounted, reactive, ref } from 'vue'
 /* MarkDown 渲染组件 */
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
-import { addArticle, getCategoryList } from '@/api/index'
+import { addArticle, getArticleDeatil, getCategoryList, editArticle } from '@/api/index'
 import { categoryListDatum } from '@/api/category/types'
 import { addArticleData } from '@/api/article/types'
 import { loadingScreen } from '@/utils/loading'
+import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
+const router = useRouter()
+const route = useRoute()
+/* 是否编辑状态 */
+const isEdit = ref(false)
 /* 栏目列表 */
 const categoryList = ref([] as categoryListDatum[])
 /* 获取栏目列表 */
@@ -39,18 +45,52 @@ const getCategoryListHandler = async () => {
   }
 }
 /* 文章详情 */
-const articleData = reactive({} as addArticleData)
+const articleData = ref({} as addArticleData)
+const articleID = ref(0)
+/* 获取路由文章 ID */
+const getArticleID = () => {
+  articleID.value = +route.query.id! as number
+  if (!articleID.value) {
+    isEdit.value = false
+    return
+  } else {
+    isEdit.value = true
+    getArticleDeatilHanlder(articleID.value)
+  }
+}
+/* 获取文章详情 */
+const getArticleDeatilHanlder = async (id: number) => {
+  try {
+    loadingScreen(true)
+    const res = await getArticleDeatil({ id })
+    articleData.value = res.data
+  } catch (error) {
+    console.log(error)
+  }
+  /* 停止 Loading 状态 */
+  loadingScreen(false)
+}
 /* 保存文章 */
 const onSave = async () => {
   try {
     loadingScreen(true)
-    await addArticle(articleData)
+    if (isEdit.value) {
+      await editArticle(articleID.value, articleData.value)
+      ElMessage.success('修改文章成功!')
+    } else {
+      /* 添加作者为当前登录用户 */
+      articleData.value.author = localStorage.getItem('name') as string
+      await addArticle(articleData.value)
+      ElMessage.success('新增文章成功!')
+    }
+    router.push({ name: 'Home' })
   } catch (error) {
     console.log(error)
   }
   loadingScreen(false)
 }
 onMounted(() => {
+  getArticleID()
   getCategoryListHandler()
 })
 </script>

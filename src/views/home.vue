@@ -15,9 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, onMounted, ref, watch } from 'vue'
-import { getArticleList } from '@/api/index'
 import { articleListDatum } from '@/api/article/types'
+import { getArticleList } from '@/api/index'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 /* 加载状态 */
 const loading = ref(true)
@@ -38,33 +38,31 @@ const getArticleListHandler = async () => {
   loading.value = false
 }
 
-// #region 触底函数相关
-//文档高度
-function getDocumentTop() {
-  return document.documentElement.offsetHeight
-}
-//可视窗口高度
-function getWindowHeight() {
-  return document.documentElement.clientHeight
-}
-//滚动条滚动高度
-function getScrollHeight() {
-  return Math.max(document.documentElement.scrollTop, window.pageYOffset || 0)
-}
 /* 触底函数 */
 const touchBottom = () => {
-  window.addEventListener('scroll', () => {
-    let result = getScrollHeight() + getWindowHeight() >= getDocumentTop()
-    if (result) {
-      articlePage.value++
-      getArticleListHandler()
-    }
-  })
+  // 滚动条滚动高度
+  let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+  // 可视区域
+  let clientHeight = document.documentElement.clientHeight
+  // 页面的高度
+  let scrollHeight = document.documentElement.scrollHeight
+  // 判断高度
+  if (scrollTop + clientHeight >= scrollHeight) {
+    articlePage.value++
+    getArticleListHandler()
+  }
 }
-// #endregion
+
 onMounted(() => {
+  /* 获取第一屏数据 */
   getArticleListHandler()
-  touchBottom()
+  /* 添加滚动事件监听 */
+  window.addEventListener('scroll', touchBottom)
+})
+
+onBeforeUnmount(() => {
+  /* 移除滚动事件监听 */
+  window.removeEventListener('scroll', touchBottom)
 })
 </script>
 <style lang="scss" scoped>
